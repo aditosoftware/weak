@@ -35,7 +35,7 @@ public class WeakReferences<T> implements Iterable<T>
   public boolean isEmpty()
   {
     boolean empty;
-    synchronized (set){
+    synchronized (set) {
       empty = set.isEmpty();
     }
     return empty;
@@ -58,6 +58,17 @@ public class WeakReferences<T> implements Iterable<T>
     Reference<T> reference = findReference(pObject);
     if (reference != null)
       remove(reference);
+  }
+
+  public void clear()
+  {
+    boolean wasEmpty;
+    synchronized (set) {
+      wasEmpty = set.isEmpty();
+      set.clear();
+    }
+    if (!wasEmpty)
+      availabilityChanged(false);
   }
 
   protected void remove(@Nonnull Reference<T> pReference)
