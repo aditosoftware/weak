@@ -15,7 +15,7 @@ public class WeakReferences<T> implements Iterable<T>
 
   public WeakReferences()
   {
-    set = Collections.synchronizedSet(new LinkedHashSet<WeakReference<T>>());
+    set = new LinkedHashSet<>();
   }
 
   @Nonnull

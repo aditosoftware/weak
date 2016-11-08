@@ -15,7 +15,7 @@ public class MixedReferences<T> implements Iterable<T>
 
   public MixedReferences()
   {
-    set = Collections.synchronizedSet(new LinkedHashSet<>());
+    set = new LinkedHashSet<>();
   }
 
   @Nonnull
