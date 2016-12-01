@@ -6,9 +6,12 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
+ * A bag that holds WeakReferences and notifies when there are elements available or when there are no longer elements
+ * available.
+ *
  * @author j.boesl, 03.11.2016
  */
-public class WeakReferences<T> implements Iterable<T>
+public class WeakReferences<T> implements IBag<T>
 {
 
   private final Set<WeakReference<T>> set;
@@ -41,6 +44,11 @@ public class WeakReferences<T> implements Iterable<T>
     return empty;
   }
 
+  /**
+   * Adds a Object to this Bag. The Object is stored weakly.
+   *
+   * @param pObject the Object to be added to this bag.
+   */
   public void add(@Nonnull T pObject)
   {
     Objects.requireNonNull(pObject);
@@ -53,6 +61,10 @@ public class WeakReferences<T> implements Iterable<T>
       availabilityChanged(true);
   }
 
+  /**
+   * @param pObject the Object to be removed. This Object has to be the value of a WeakReference that is stored in this
+   *                bag.
+   */
   public void remove(@Nonnull T pObject)
   {
     Reference<T> reference = findReference(pObject);
@@ -71,6 +83,9 @@ public class WeakReferences<T> implements Iterable<T>
       availabilityChanged(false);
   }
 
+  /**
+   * @param pReference the Reference to be removed.
+   */
   protected void remove(@Nonnull Reference<T> pReference)
   {
     boolean wasEmpty;
@@ -84,6 +99,12 @@ public class WeakReferences<T> implements Iterable<T>
       availabilityChanged(false);
   }
 
+  /**
+   * Returns the reference that holds the given value.
+   *
+   * @param pObject the value.
+   * @return the reference or null in case it was not found.
+   */
   @Nullable
   protected Reference<T> findReference(@Nonnull T pObject)
   {
@@ -97,6 +118,9 @@ public class WeakReferences<T> implements Iterable<T>
     return null;
   }
 
+  /**
+   * @return a List of all Objects this bag contains.
+   */
   @Nonnull
   protected List<T> getObjects()
   {
@@ -112,6 +136,11 @@ public class WeakReferences<T> implements Iterable<T>
     return objects;
   }
 
+  /**
+   * Called when this bag change it's state to contain elements or no longer contains elements.
+   *
+   * @param pAvailable whether there are now elements and prior where not or vice versa.
+   */
   protected void availabilityChanged(boolean pAvailable)
   {
   }

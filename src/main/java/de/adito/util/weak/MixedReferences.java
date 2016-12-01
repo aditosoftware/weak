@@ -6,9 +6,12 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
+ * A bag that holds WeakReferences as well as plain Objects and notifies when there are elements available or when there
+ * are no longer elements available.
+ *
  * @author j.boesl, 08.11.16
  */
-public class MixedReferences<T> implements Iterable<T>
+public class MixedReferences<T> implements IBag<T>
 {
 
   private final Set set;
@@ -41,6 +44,11 @@ public class MixedReferences<T> implements Iterable<T>
     return empty;
   }
 
+  /**
+   * Adds a Object to this Bag. The Object is stored weakly.
+   *
+   * @param pObject the Object to be added to this bag.
+   */
   public void addWeak(@Nonnull T pObject)
   {
     Objects.requireNonNull(pObject);
@@ -53,6 +61,11 @@ public class MixedReferences<T> implements Iterable<T>
       availabilityChanged(true);
   }
 
+  /**
+   * Adds a Object to this Bag. The Object is stored strongly.
+   *
+   * @param pObject the Object to be added to this bag.
+   */
   public void addStrong(@Nonnull T pObject)
   {
     Objects.requireNonNull(pObject);
@@ -68,6 +81,10 @@ public class MixedReferences<T> implements Iterable<T>
       availabilityChanged(true);
   }
 
+  /**
+   * @param pObject the Object to be removed. This Object can be the value of a WeakReference that is stored in this
+   *                bag or the WeakReference itself.
+   */
   public boolean remove(@Nonnull Object pObject)
   {
     boolean wasEmpty;
@@ -100,6 +117,12 @@ public class MixedReferences<T> implements Iterable<T>
       availabilityChanged(false);
   }
 
+  /**
+   * Returns the reference that holds the given value.
+   *
+   * @param pObject the value.
+   * @return the reference or null in case it was not found.
+   */
   @Nullable
   protected Reference<T> findReference(@Nonnull Object pObject)
   {
@@ -115,6 +138,9 @@ public class MixedReferences<T> implements Iterable<T>
     return null;
   }
 
+  /**
+   * @return a List of all Objects this bag contains. No WeakReferences are returned but just the plain objects.
+   */
   @Nonnull
   protected List<T> getObjects()
   {
@@ -131,6 +157,11 @@ public class MixedReferences<T> implements Iterable<T>
     return objects;
   }
 
+  /**
+   * Called when this bag change it's state to contain elements or no longer contains elements.
+   *
+   * @param pAvailable whether there are now elements and prior where not or vice versa.
+   */
   protected void availabilityChanged(boolean pAvailable)
   {
   }

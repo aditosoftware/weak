@@ -5,11 +5,16 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
+ * A ReferenceQueue that notifies the weak references when they are collected.
+ *
  * @author j.boesl, 03.11.2016
  */
 public class ListenableReferenceQueue extends ReferenceQueue<Object>
 {
 
+  /**
+   * The time the notification thread waits on the ReferenceQueue for new references.
+   */
   private final static int POLL_TIMEOUT = Optional
       .ofNullable(((Supplier<Integer>) () -> {
         String pollTimeoutString = System.getProperty("de.adito.util.weak.polltimeout");
@@ -26,7 +31,9 @@ public class ListenableReferenceQueue extends ReferenceQueue<Object>
 
   private _Thread thread;
 
-
+  /**
+   * Starts the notification thread. Only when start has been called the weak references are notified.
+   */
   public synchronized void start()
   {
     if (thread == null) {
@@ -35,6 +42,9 @@ public class ListenableReferenceQueue extends ReferenceQueue<Object>
     }
   }
 
+  /**
+   * Stops the notification thread. This doesn't stop immediately but depends on POLL_TIMEOUT.
+   */
   public synchronized void stop()
   {
     if (thread != null) {

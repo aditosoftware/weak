@@ -6,6 +6,8 @@ import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 /**
+ * Factory for WeakReferences that are notified about being collected.
+ *
  * @author j.boesl, 03.11.2016
  */
 public class WeakReferenceFactory
@@ -16,6 +18,9 @@ public class WeakReferenceFactory
   private ListenableReferenceQueue referenceQueue = new ListenableReferenceQueue();
   private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
+  /**
+   * @return the singleton instance.
+   */
   public static WeakReferenceFactory get()
   {
     return INSTANCE;
@@ -26,6 +31,14 @@ public class WeakReferenceFactory
     referenceQueue.start();
   }
 
+  /**
+   * Creates a WeakReference.
+   *
+   * @param pValue     the value for the reference to take.
+   * @param pOnCollect consumer that is called when the reference was collected.
+   * @param <T>        the reference's type.
+   * @return the newly created WeakReference.
+   */
   public <T> WeakReference<T> create(T pValue, Consumer<Reference<T>> pOnCollect)
   {
     Objects.nonNull(pOnCollect);
