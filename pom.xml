@@ -6,19 +6,51 @@
 
   <groupId>de.adito.util</groupId>
   <artifactId>weak</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
+
+  <name>${project.groupId}:${project.artifactId}</name>
+  <description>utility package for java weak references</description>
+  <url>https://github.com/aditosoftware/weak</url>
+
+
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>LICENSE.md</url>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>ADITO Software GmbH</name>
+    <url>http://www.adito.de</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <id>jboesl</id>
+      <name>Johannes Boesl</name>
+      <email>j.boesl@adito.de</email>
+      <timezone>1</timezone>
+      <organization>ADITO Software GmbH</organization>
+      <organizationUrl>http://www.adito.de</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>https://github.com/aditosoftware/weak.git</connection>
+    <developerConnection>git@github.com:aditosoftware/weak.git</developerConnection>
+    <url>https://github.com/aditosoftware/weak</url>
+  </scm>
+
+  <issueManagement>
+    <url>https://github.com/aditosoftware/weak/issues</url>
+    <system>github</system>
+  </issueManagement>
 
   <distributionManagement>
-    <repository>
-      <id>adito.m2</id>
-      <name>releases</name>
-      <url>${repository.releases}</url>
-    </repository>
     <snapshotRepository>
-      <id>adito.m2</id>
-      <name>snapshots</name>
-      <url>${repository.snapshots}</url>
-      <uniqueVersion>false</uniqueVersion>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
   </distributionManagement>
 
@@ -107,15 +139,6 @@
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
         <version>2.4</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
 
       <plugin>
@@ -131,6 +154,67 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-javadoc</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.6.5</version>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>ossrh</serverId>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <autoReleaseAfterClose>true</autoReleaseAfterClose>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 
 </project>
