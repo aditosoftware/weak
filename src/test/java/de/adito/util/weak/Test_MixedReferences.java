@@ -64,29 +64,34 @@ public class Test_MixedReferences
         references.addStrong(namedObject);
     }
 
+    NamedObject customRemove = new NamedObject("customRemove");
+    references.addWeak(customRemove);
+    references.remove(customRemove);
+
     System.gc();
 
     _waitForEmpty(references, 10);
 
-    Assert.assertEquals("av+true:aw+NO{0}:as+NO{1}:aw+NO{2}:as+NO{3}:aw+NO{4}:as+NO{5}:aw+NO{6}:as+NO{7}:aw+NO{8}:as+NO{9}:aw+NO{10}:as+NO{11}:aw+NO{12}:as+NO{13}:aw+NO{14}:as+NO{15}:aw+NO{16}:as+NO{17}:aw+NO{18}:as+NO{19}:",
+    Assert.assertEquals("av+true:aw+NO{0}:as+NO{1}:aw+NO{2}:as+NO{3}:aw+NO{4}:as+NO{5}:aw+NO{6}:as+NO{7}:aw+NO{8}:as+NO{9}:aw+NO{10}:as+NO{11}:aw+NO{12}:as+NO{13}:aw+NO{14}:as+NO{15}:aw+NO{16}:as+NO{17}:aw+NO{18}:as+NO{19}:aw+NO{customRemove}:re+NO{customRemove}:",
                         strBuf.toString());
 
+    strBuf.setLength(0);
     objects = null;
-
     System.gc();
 
     _waitForEmpty(references, 100);
 
-    Assert.assertEquals("av+true:aw+NO{0}:as+NO{1}:aw+NO{2}:as+NO{3}:aw+NO{4}:as+NO{5}:aw+NO{6}:as+NO{7}:aw+NO{8}:as+NO{9}:aw+NO{10}:as+NO{11}:aw+NO{12}:as+NO{13}:aw+NO{14}:as+NO{15}:aw+NO{16}:as+NO{17}:aw+NO{18}:as+NO{19}:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:",
+    Assert.assertEquals("re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:",
                         strBuf.toString());
 
     Assert.assertEquals(Arrays.toString(references.getObjects().toArray()), "[NO{1}, NO{3}, NO{5}, NO{7}, NO{9}, NO{11}, NO{13}, NO{15}, NO{17}, NO{19}]");
 
+    strBuf.setLength(0);
     references.clear();
 
     Assert.assertTrue(references.isEmpty());
 
-    Assert.assertEquals("av+true:aw+NO{0}:as+NO{1}:aw+NO{2}:as+NO{3}:aw+NO{4}:as+NO{5}:aw+NO{6}:as+NO{7}:aw+NO{8}:as+NO{9}:aw+NO{10}:as+NO{11}:aw+NO{12}:as+NO{13}:aw+NO{14}:as+NO{15}:aw+NO{16}:as+NO{17}:aw+NO{18}:as+NO{19}:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:av+false:",
+    Assert.assertEquals("av+false:",
                         strBuf.toString());
   }
 

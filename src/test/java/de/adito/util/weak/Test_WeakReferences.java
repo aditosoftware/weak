@@ -49,20 +49,24 @@ public class Test_WeakReferences
       references.add(namedObject);
     }
 
+    NamedObject customRemove = new NamedObject("customRemove");
+    references.add(customRemove);
+    references.remove(customRemove);
+
     System.gc();
 
     _waitForEmpty(references, 10);
 
-    Assert.assertEquals("av+true:ad+NO{0}:ad+NO{1}:ad+NO{2}:ad+NO{3}:ad+NO{4}:ad+NO{5}:ad+NO{6}:ad+NO{7}:ad+NO{8}:ad+NO{9}:ad+NO{10}:ad+NO{11}:ad+NO{12}:ad+NO{13}:ad+NO{14}:ad+NO{15}:ad+NO{16}:ad+NO{17}:ad+NO{18}:ad+NO{19}:",
+    Assert.assertEquals("av+true:ad+NO{0}:ad+NO{1}:ad+NO{2}:ad+NO{3}:ad+NO{4}:ad+NO{5}:ad+NO{6}:ad+NO{7}:ad+NO{8}:ad+NO{9}:ad+NO{10}:ad+NO{11}:ad+NO{12}:ad+NO{13}:ad+NO{14}:ad+NO{15}:ad+NO{16}:ad+NO{17}:ad+NO{18}:ad+NO{19}:ad+NO{customRemove}:re+NO{customRemove}:",
                         strBuf.toString());
 
+    strBuf.setLength(0);
     objects = null;
-
     System.gc();
 
     _waitForEmpty(references, 100);
 
-    Assert.assertEquals("av+true:ad+NO{0}:ad+NO{1}:ad+NO{2}:ad+NO{3}:ad+NO{4}:ad+NO{5}:ad+NO{6}:ad+NO{7}:ad+NO{8}:ad+NO{9}:ad+NO{10}:ad+NO{11}:ad+NO{12}:ad+NO{13}:ad+NO{14}:ad+NO{15}:ad+NO{16}:ad+NO{17}:ad+NO{18}:ad+NO{19}:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:av+false:",
+    Assert.assertEquals("re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:re+_WR:av+false:",
                         strBuf.toString());
 
     Assert.assertTrue(references.isEmpty());

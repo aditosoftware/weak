@@ -3,7 +3,6 @@ package de.adito.util.weak;
 import javax.annotation.*;
 import java.lang.ref.*;
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * A bag that holds WeakReferences and notifies when there are elements available or when there are no longer elements
@@ -11,7 +10,7 @@ import java.util.function.Consumer;
  *
  * @author j.boesl, 03.11.2016
  */
-public class WeakReferences<T> implements IBag<T>
+public class WeakReferences<T> extends AbstractBag<T>
 {
 
   private final Set<WeakReference<T>> set;
@@ -19,20 +18,6 @@ public class WeakReferences<T> implements IBag<T>
   public WeakReferences()
   {
     set = new LinkedHashSet<>();
-  }
-
-  @Nonnull
-  @Override
-  public Iterator<T> iterator()
-  {
-    return getObjects().iterator();
-  }
-
-  @Override
-  public void forEach(@Nonnull Consumer<? super T> pAction)
-  {
-    Objects.requireNonNull(pAction);
-    getObjects().forEach(pAction);
   }
 
   public boolean isEmpty()
@@ -134,15 +119,6 @@ public class WeakReferences<T> implements IBag<T>
       }
     }
     return objects;
-  }
-
-  /**
-   * Called when this bag change it's state to contain elements or no longer contains elements.
-   *
-   * @param pAvailable whether there are now elements and prior where not or vice versa.
-   */
-  protected void availabilityChanged(boolean pAvailable)
-  {
   }
 
 }

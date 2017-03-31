@@ -3,7 +3,6 @@ package de.adito.util.weak;
 import javax.annotation.*;
 import java.lang.ref.*;
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * A bag that holds WeakReferences as well as plain Objects and notifies when there are elements available or when there
@@ -11,7 +10,7 @@ import java.util.function.Consumer;
  *
  * @author j.boesl, 08.11.16
  */
-public class MixedReferences<T> implements IBag<T>
+public class MixedReferences<T> extends AbstractBag<T>
 {
 
   private final Set set;
@@ -19,20 +18,6 @@ public class MixedReferences<T> implements IBag<T>
   public MixedReferences()
   {
     set = new LinkedHashSet<>();
-  }
-
-  @Nonnull
-  @Override
-  public Iterator<T> iterator()
-  {
-    return getObjects().iterator();
-  }
-
-  @Override
-  public void forEach(@Nonnull Consumer<? super T> pAction)
-  {
-    Objects.requireNonNull(pAction);
-    getObjects().forEach(pAction);
   }
 
   public boolean isEmpty()
@@ -83,7 +68,7 @@ public class MixedReferences<T> implements IBag<T>
 
   /**
    * @param pObject the Object to be removed. This Object can be the value of a WeakReference that is stored in this
-   *                bag or the WeakReference itself.
+   *                bag or the object itself.
    */
   public boolean remove(@Nonnull Object pObject)
   {
@@ -127,12 +112,10 @@ public class MixedReferences<T> implements IBag<T>
   protected Reference<T> findReference(@Nonnull Object pObject)
   {
     Objects.requireNonNull(pObject);
-    if (pObject instanceof WeakReference) {
-      synchronized (set) {
-        for (Object o : set) {
-          if (o instanceof WeakReference && pObject.equals(((WeakReference) o).get()))
-            return (Reference<T>) o;
-        }
+    synchronized (set) {
+      for (Object o : set) {
+        if (o instanceof WeakReference && pObject.equals(((WeakReference) o).get()))
+          return (Reference<T>) o;
       }
     }
     return null;
@@ -155,15 +138,6 @@ public class MixedReferences<T> implements IBag<T>
       }
     }
     return objects;
-  }
-
-  /**
-   * Called when this bag change it's state to contain elements or no longer contains elements.
-   *
-   * @param pAvailable whether there are now elements and prior where not or vice versa.
-   */
-  protected void availabilityChanged(boolean pAvailable)
-  {
   }
 
 }
